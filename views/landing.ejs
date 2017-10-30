@@ -1,0 +1,26 @@
+<% include ./partials/header %>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <h1 class="text-center">Welcome to Aquarium Monitor</h1>            
+            <p class="lead">Aquarium Monitor is a helpful application used to monitor your aquarium's chemical parameters over time. You can record test strip readings, plants, fish, and water changes for your aquarium and share the status of your aquarium with others.</p>
+            <div class="text-center">
+                <p class="lead">Check out our aquariums or give it a try yourself!</p>
+                <a href="/aquariums" class="btn btn-lg btn-success">View All Aquariums</a>    
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="thumbnail">
+                <% if (aquarium) { %>
+                    <img src="<%= aquarium.image %>" class="img-responsive"></img>    
+                    <div class="caption text-center">
+                        <a href="/aquariums/<%= aquarium._id %>" class="btn btn-success"><%= aquarium.name %></a>
+                    </div>
+                <% } %>
+            </div> 
+        </div>
+    </div>
+</div>
+
+<% include ./partials/footer %>

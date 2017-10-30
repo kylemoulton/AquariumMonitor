@@ -1,0 +1,36 @@
+<% include ../partials/header %>
+
+
+
+<div class="container">
+    <h1>All Aquariums Page</h1>
+    <div class="row text-center" style="display:flex; flex-wrap:wrap;">
+        <% aquariums.forEach(function(aquarium) { %> 
+            <div class="col-md-4 col-sm-4">
+                <div class="thumbnail">
+                    <img class="img-responsive" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Amaterske_akvarium.jpg/1200px-Amaterske_akvarium.jpg">
+
+                    <div class="caption-full">
+                        <h4><%= aquarium.name %></h4>
+                        <p>
+                            <a href="/aquariums/<%= aquarium._id %>" class="btn btn-primary">Check it out</a>
+                        </p>
+                        <a class="btn btn-xs btn-warning" href="/aquariums/<%= aquarium._id %>/edit">Edit</a>
+                        <form style="display: inline;" action="/aquariums/<%= aquarium._id %>?_method=DELETE" method="POST">
+                            <input type="submit" class="btn btn-xs btn-danger" value="Delete"></input>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        <% }) %>
+    </div>    
+</div>
+<div class="container-fluid text-center" style="margin-top:20px; margin-bottom:50px">
+    <div>
+        <a class="btn btn-lg btn-primary" href="/aquariums/new">Add New Aquarium</a>    
+    </div>
+</div>
+
+
+
+<% include ../partials/footer %>

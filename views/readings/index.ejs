@@ -1,0 +1,22 @@
+<% include ../partials/header %>
+
+<div class="container">
+    
+        <% aquarium.readings.forEach(function(reading) { %>
+            <div class="row" style="margin-bottom:20px;">
+                <div class="col-md-6 col-md-offset-3 thumbnail">
+                    <p>
+                        <strong><%= reading.date.toDateString() %></strong>
+                    </p>
+                    <a href="/aquariums/<%= aquarium._id %>/readings/<%= reading._id %>/edit" class="btn btn-sm btn-warning">Edit This reading</a>    
+                    <form style="display:inline;" action="/aquariums/<%= aquarium._id %>/readings/<%= reading._id %>?_method=DELETE" method="POST">
+                        <input type="submit" class="btn btn-sm btn-danger" value="Delete This Reading"></input>
+                    </form>
+                </div>
+            </div>
+        <% }); %>                
+        <a class="btn btn-sm btn-success col-md-1 col-md-offset-3" href="/aquariums/<%= aquarium._id %>">Go Back</a> 
+</div>
+
+
+<% include ../partials/footer %>

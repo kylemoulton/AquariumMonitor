@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Aquarium Status Monitor</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/stylesheet/main.css">
+        <script type="text/javascript" src="/js/Chart.bundle.js"></script>
+        <script type="text/javascript" src="/js/chartjs-plugin-annotation.js"></script>
+        <script type="text/javascript">
+            function createChart(chemParameter, chemUnits, readings, minY, maxY, chartTitle, ctx) {
+                var dataPoints = [];
+                
+                readings.forEach(function(reading) {
+                   dataPoints.push({x: reading.date, y: reading[chemParameter]}); 
+                });
+                
+                return new Chart(ctx, {
+                    type: "line",
+                    data:
+                    {
+                        datasets: [
+                            {
+                                label: chemParameter,
+                                data: dataPoints, 
+                                fill: false,
+                                borderColor: "rgb(75, 150, 150)",
+                                lineTension: 0.1
+                            }
+                        ]
+                    },
+                    options: {
+                        annotation: {
+                            annotations: waterChanges
+                        },
+                        title: {
+                            display: true,
+                            text: chartTitle
+                        },
+                        
+                        legend: {
+                            display: false
+                        },
+                        
+                        scales: {
+                        	xAxes: [{
+                        		scaleLabel: {
+                        			display: true,
+                        			labelString: "Date (mm/dd/yy)"
+                        		},
+                        		type: "time",
+                        		unit: "day",
+                        		unitStepSize: 1,
+                        		time: {
+                        			displayFormats: {
+                        				"day": "MM/DD/YY"
+                        			}
+                        		},
+                        		position: 'bottom'
+                        	}],
+                            yAxes: [{
+                            	scaleLabel: {
+                        			display: true,
+                        			labelString: chemUnits
+                        			// labelString: "Ammonia ppm (mg/L)"
+                        		},
+                                ticks: {
+                                    // beginAtZero:true,
+                                    min: minY,
+                                    max: maxY
+                                }
+                            }]
+                        }
+                    }
+                });
+            }
+        </script>
+        <style>
+            body {
+                background-color: #e6ecf0;
+            }
+        </style>
+    </head>
+    <body>
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="/">Aquarium Monitor</a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <% if(!currentUser) { %>
+                            <li><a href="/login">Login</a></li>
+                            <li><a href="/register">Sign Up</a></li>
+                        <% } else { %>
+                            <li><a href="/#">Signed In As <%= currentUser.username %></a></li>
+                            <li><a href="/logout">Logout</a></li>
+                        <% } %>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        
+        <div class="container">
+            <% if (error && error.length > 0) { %>
+                <div class="alert alert-danger" role="alert">
+                    <%= error %>
+                </div>
+            <% } %>
+            <% if (success && success.length > 0) { %>
+                <div class="alert alert-success" role="alert">
+                    <%= success %>
+                </div>
+            <% } %>
+        </div>
+        
+        <div class="container" style="margin-bottom:20px;">
+            <div class="col-md-12">
+                <h1 class="display-2"><%= aquarium.name %></h1>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="col-md-12">
+                        <% if (aquarium.fish.length > 0) { %>
+                            <p>Fish:</p>
+                            <div class="table-responsive">
+                                <table class="table table-condensed">
+                                        <tr>
+                                            <th>Species</th>
+                                            <th>Count</th>
+                                        </tr>
+                                    <% aquarium.fish.forEach(function(fish) { %>
+                                    
+                                        <tr>
+                                            <td><%= fish.species %></td>
+                                            <td><%= fish.count %></td>
+                                        </tr>
+                                    <% }); %>
+                                </table>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+    
+                <div class="col-md-4">
+                    <div class="col-md-12">
+                        <% if (aquarium.plants.length > 0) { %>
+                            <p>Plants:</p>
+                            <div class="table-responsive">
+                                <table class="table table-condensed">
+                                        <tr>
+                                            <th>Species</th>
+                                            <th>Count</th>
+                                        </tr>
+                                    <% aquarium.plants.forEach(function(plant) { %>
+                                        <tr>
+                                            <td><%= plant.species %></td>
+                                            <td><%= plant.count %></td>
+                                        </tr>
+                                    <% }); %>
+                                </table>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>    
+            
+                <div class="col-md-4">
+                    <div class="thumbnail">
+                        <img src="<%= aquarium.image %>">
+                    </div>
+                </div>
+            </div>
+                
+            <div class="col-md-4">
+                <div class="row">
+                    <a class="btn btn-primary btn-sm col-md-5" href="/aquariums/<%= aquarium._id %>/fish/new">Add Fish</a>
+                    <a class="btn btn-warning btn-sm col-md-5 col-md-offset-1" href="/aquariums/<%= aquarium._id %>/fish/edit">Edit or Remove Fish</a>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class = "row">
+                    <a class="btn btn-primary btn-sm col-md-5" href="/aquariums/<%= aquarium._id %>/plants/new">Add Plants</a>
+                    <a class="btn btn-warning btn-sm col-md-5 col-md-offset-1" href="/aquariums/<%= aquarium._id %>/plants/edit">Edit or Remove Plants</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-5 col-md-offset-1" style="margin-bottom:10px;">
+                    <h1 class="display-3">Chemical Trends</h1>
+                </div>
+            </div>
+        </div>
+        
+        <div class="container text-center">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="container-fluid" style-"margin-bottom:20px">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <a style="margin-bottom:10px;" class="btn btn-primary col-md-12" href="/aquariums/<%= aquarium._id %>/readings/new">Add New Measurements</a>    
+                            </div>
+                            <div class="col-md-12">
+                                <a style="margin-bottom:30px;" class="btn btn-warning col-md-12" href="/aquariums/<%= aquarium._id %>/readings">Edit or Delete a Reading</a>
+                            </div>
+                            <div class="col-md-12">
+                                <a style="margin-bottom:10px;" class="btn btn-primary col-md-12" href="/aquariums/<%= aquarium._id %>/water-changes/new">Add New Water Change</a>
+                            </div>
+                            <div class="col-md-12">
+                                <a style-"margin-bottom:30px;" class="btn btn-warning col-md-12" href="/aquariums/<%= aquarium._id %>/water-changes">Edit or Delete a Water Change</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-justify">
+                        <h2>Comments</h2>
+                        <% if (typeof aquarium.comments !== "undefined") { %>
+                            <% aquarium.comments.forEach(function(comment) { %>
+                                <div>
+                                    <p style="word-break:break-word;"><%= comment.text %></p>
+                                </div>
+                                <div class="text-right">
+                                    <strong>Submited By <%= comment.author.username %></strong>
+                                </div>                            
+                            <% }) %>
+                        <% } %>
+                    </div>
+                </div>
+                
+                <div class="col-md-9">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="thumbnail">
+                                <canvas id="ammoniaChart" width="400" height="400"></canvas>    
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="thumbnail">
+                                <canvas id="nitriteChart" width="400" height="400"></canvas>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="thumbnail">
+                                <canvas id="nitrateChart" width="400" height="400"></canvas>
+                            </div>
+                        </div>
+                    </div>            
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="thumbnail">
+                                <canvas id="generalHardnessChart" width="400" height="400"></canvas>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="thumbnail">
+                                <canvas id="carbonateHardnessChart" width="400" height="400"></canvas>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="thumbnail">
+                                <canvas id="pHChart" width="400" height="400"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <script type="text/javascript">
+            var readingsArray = [];
+            var readings = <%- JSON.stringify(aquarium.readings) %>;
+            for (var i = 0; i < readings.length; i++) {
+                readingsArray.push(readings[i]);
+            }
+            
+            var waterChanges = [];
+            var wChanges = <%- JSON.stringify(aquarium.waterChanges) %>;
+            for (var i = 0; i < wChanges.length; i++) {
+                waterChanges.push({
+                    type: "line",
+                    mode: "vertical",
+                    scaleID: "x-axis-0",
+                    value: wChanges[i]["date"],
+                    borderColor: "blue",
+                    label: {
+                        content: wChanges[i]["amount"] + " Gal. Change",
+                        enabled: true,
+                        position:"top"
+                    }
+                });
+            }
+            
+            var ctx = [];
+            var charts = [];
+            var chartTypes = ["ammoniaChart", "nitriteChart", "nitrateChart", "generalHardnessChart", "carbonateHardnessChart", "pHChart"];
+            chartTypes.forEach(function(chartType) {
+               ctx.push(document.getElementById(chartType).getContext('2d')); 
+            });
+            
+            charts.push(createChart("ammonia", "Ammonia ppm (mg/L)", readingsArray, 0, 6, "Ammonia", ctx[0]));
+            charts.push(createChart("nitrite", "Nitrite ppm (mg/L)", readingsArray, 0, 10, "Nitrite", ctx[1]));
+            charts.push(createChart("nitrate", "Nitrate ppm (mg/L)", readingsArray, 0, 200, "Nitrate", ctx[2]));
+            charts.push(createChart("generalHardness", "generalHardness ppm (mg/L)", readingsArray, 0, 180, "General Hardness", ctx[3]));
+            charts.push(createChart("carbonateHardness", "Carbonate Hardness ppm (mg/L)", readingsArray, 0, 240, "Carbobnate Hardness", ctx[4]));
+            charts.push(createChart("pH", "pH", readingsArray, 6, 9, "pH", ctx[5]));
+            
+            // var canvasCharts = document.getElementsByTagName("canvas");
+            
+            // for (var i = 0; i < canvasCharts.length; i++) {
+            //     (function(currentChart) {
+            //         canvasCharts[i].addEventListener("click", function(event) {
+            //             console.log(currentChart.getElementsAtEvent(event));
+            //         });
+            //     })(charts[i]);
+            // }
+        </script>
+
+<% include ../partials/footer %>

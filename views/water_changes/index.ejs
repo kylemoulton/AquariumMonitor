@@ -1,0 +1,25 @@
+<% include ../partials/header %>
+<script>
+    console.log(<%- JSON.stringify(aquarium) %>);
+</script>
+
+<div class="container">
+        <% aquarium.waterChanges.forEach(function(change) { %>
+            <div class="row" style="margin-bottom:20px;">
+                <div class="col-md-6 col-md-offset-3 thumbnail">
+                    <p>
+                        <strong><%= change.date.toDateString() %></strong>
+                        <p><%= change.amount %> Gallons</p>
+                    </p>
+                    <a href="/aquariums/<%= aquarium._id %>/water-changes/<%= change._id %>/edit" class="btn btn-sm btn-warning">Edit This Water Change</a>    
+                    <form style="display:inline;" action="/aquariums/<%= aquarium._id %>/water-changes/<%= change._id %>?_method=DELETE" method="POST">
+                        <input type="submit" class="btn btn-sm btn-danger" value="Delete This Water Change"></input>
+                    </form>
+                </div>
+            </div>
+        <% }); %>                
+        <a class="btn btn-sm btn-success col-md-1 col-md-offset-3" href="/aquariums/<%= aquarium._id %>">Go Back</a>
+</div>
+
+
+<% include ../partials/footer %>
