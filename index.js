@@ -41,6 +41,7 @@ var waterChangeRoutes   = require("./routes/waterChanges");
 var fishRoutes          = require("./routes/fish");
 var plantRoutes         = require("./routes/plants");
 var indexRoutes         = require("./routes/index");
+var commentRoutes       = require("./routes/comments");
 
 
 app.use("/aquariums", aquariumRoutes);
@@ -48,6 +49,7 @@ app.use("/aquariums/:id/readings", readingRoutes);
 app.use("/aquariums/:id/water-changes", waterChangeRoutes);
 app.use("/aquariums/:id/fish", fishRoutes);
 app.use("/aquariums/:id/plants", plantRoutes);
+app.use("/aquariums/:id/comments", commentRoutes);
 app.use("/", indexRoutes);
 
 app.listen(3000, function() {

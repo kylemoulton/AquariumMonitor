@@ -52,7 +52,7 @@ router.get("/:id", function(req, res) {
     .populate("waterChanges")
     .populate("fish")
     .populate("plants")
-    // .populate("comments")
+    .populate("comments")
     .exec(function(err, foundAquarium) {
       if (err) {
           console.log(err);

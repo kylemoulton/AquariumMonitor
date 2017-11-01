@@ -76,7 +76,7 @@
         </script>
         <style>
             body {
-                background-color: #e6ecf0;
+                background-color: #d7e6f0;
             }
         </style>
     </head>
@@ -119,7 +119,7 @@
             </div>
             <div class="row">
                 <div class="col-md-4">
-                    <div class="col-md-12">
+                    <div class="col-md-12" style="border: 1px solid grey; border-radius: 10px; margin: 10px; background: rgb(243, 239, 207);">
                         <% if (aquarium.fish.length > 0) { %>
                             <p>Fish:</p>
                             <div class="table-responsive">
@@ -138,11 +138,17 @@
                                 </table>
                             </div>
                         <% } %>
+                        <% if (currentUser && aquarium.owner.id.equals(currentUser._id)) { %>
+                        <div class="row text-right" style="padding: 10px;">
+                            <a class="btn btn-primary btn-sm" href="/aquariums/<%= aquarium._id %>/fish/new">Add Fish</a>
+                            <a class="btn btn-warning btn-sm" href="/aquariums/<%= aquarium._id %>/fish/edit">Edit or Remove Fish</a>
+                        </div>
+                        <% } %>
                     </div>
                 </div>
     
                 <div class="col-md-4">
-                    <div class="col-md-12">
+                    <div class="col-md-12" style="border: 1px solid grey; border-radius: 10px; margin: 10px; background: rgb(243, 239, 207);">
                         <% if (aquarium.plants.length > 0) { %>
                             <p>Plants:</p>
                             <div class="table-responsive">
@@ -160,74 +166,29 @@
                                 </table>
                             </div>
                         <% } %>
+                        <% if (currentUser && aquarium.owner.id.equals(currentUser._id)) { %>
+                        <div class="row text-right" style="padding: 10px;">
+                            <a class="btn btn-primary btn-sm" href="/aquariums/<%= aquarium._id %>/plants/new">Add Plants</a>
+                            <a class="btn btn-warning btn-sm" href="/aquariums/<%= aquarium._id %>/plants/edit">Edit or Remove Plants</a>
+                        </div>
+                        <% } %>
                     </div>
                 </div>    
             
                 <div class="col-md-4">
-                    <div class="thumbnail">
+                    <div class="thumbnail" style="min-height: 250px;">
                         <img src="<%= aquarium.image %>">
                     </div>
                 </div>
-            </div>
-                
-            <div class="col-md-4">
-                <div class="row">
-                    <a class="btn btn-primary btn-sm col-md-5" href="/aquariums/<%= aquarium._id %>/fish/new">Add Fish</a>
-                    <a class="btn btn-warning btn-sm col-md-5 col-md-offset-1" href="/aquariums/<%= aquarium._id %>/fish/edit">Edit or Remove Fish</a>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class = "row">
-                    <a class="btn btn-primary btn-sm col-md-5" href="/aquariums/<%= aquarium._id %>/plants/new">Add Plants</a>
-                    <a class="btn btn-warning btn-sm col-md-5 col-md-offset-1" href="/aquariums/<%= aquarium._id %>/plants/edit">Edit or Remove Plants</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="container">
-            <div class="row">
-                <div class="col-md-5 col-md-offset-1" style="margin-bottom:10px;">
-                    <h1 class="display-3">Chemical Trends</h1>
-                </div>
-            </div>
+            </div>            
         </div>
         
         <div class="container text-center">
             <div class="row">
-                <div class="col-md-3">
-                    <div class="container-fluid" style-"margin-bottom:20px">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <a style="margin-bottom:10px;" class="btn btn-primary col-md-12" href="/aquariums/<%= aquarium._id %>/readings/new">Add New Measurements</a>    
-                            </div>
-                            <div class="col-md-12">
-                                <a style="margin-bottom:30px;" class="btn btn-warning col-md-12" href="/aquariums/<%= aquarium._id %>/readings">Edit or Delete a Reading</a>
-                            </div>
-                            <div class="col-md-12">
-                                <a style="margin-bottom:10px;" class="btn btn-primary col-md-12" href="/aquariums/<%= aquarium._id %>/water-changes/new">Add New Water Change</a>
-                            </div>
-                            <div class="col-md-12">
-                                <a style-"margin-bottom:30px;" class="btn btn-warning col-md-12" href="/aquariums/<%= aquarium._id %>/water-changes">Edit or Delete a Water Change</a>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="text-justify">
-                        <h2>Comments</h2>
-                        <% if (typeof aquarium.comments !== "undefined") { %>
-                            <% aquarium.comments.forEach(function(comment) { %>
-                                <div>
-                                    <p style="word-break:break-word;"><%= comment.text %></p>
-                                </div>
-                                <div class="text-right">
-                                    <strong>Submited By <%= comment.author.username %></strong>
-                                </div>                            
-                            <% }) %>
-                        <% } %>
-                    </div>
-                </div>
-                
                 <div class="col-md-9">
+                    <div class="row" style="margin-bottom:10px;">
+                        <h1 class="display-3">Chemical Trends</h1>
+                    </div>
                     <div class="row">
                         <div class="col-md-4">
                             <div class="thumbnail">
@@ -263,6 +224,56 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="col-md-3">
+                    <div class="text-justify" style="margin-bottom:50px;">
+                        <h1 class="display-3" style="margin-bottom:20px;">Comments</h1>
+                        <% if (typeof aquarium.comments !== "undefined") { %>
+                            <% aquarium.comments.forEach(function(comment) { %>
+                                <div class="rounded" style="border: 1px solid grey; border-radius: 10px; padding: 5px; margin-bottom:5px; background-color:rgb(243, 239, 207)">
+                                        <div>
+                                            <p style="word-break:break-word;">"<%= comment.text %>"</p>
+                                        </div>
+                                        <div class="text-right">
+                                            <p style="color:grey"><strong><%= comment.author.username %></strong> - <%= String(comment.date.getMonth() + 1) + "/" + String(comment.date.getDate()) + "/" + String(comment.date.getFullYear()) %></p>
+                                        </div>
+                                        <% if (currentUser && comment.author.id.equals(currentUser._id)) { %>
+                                        <div class="text-right">
+                                            <a class="btn btn-xs btn-warning" href="/aquariums/<%= aquarium._id %>/comments/<%= comment._id %>/edit">Edit</a>
+                                            <form style="display:inline;" action="/aquariums/<%= aquarium._id %>/comments/<%= comment._id %>?_method=DELETE" method="POST">
+                                                <input type="submit" class="btn btn-xs btn-danger" value="Delete"></input>
+                                            </form>
+                                        </div>
+                                        <% } %>
+                                </div>
+                            <% }) %>
+                        <% } %>
+
+                        <a class="btn btn-sm btn-primary" href="/aquariums/<%= aquarium._id %>/comments/new">Add a Comment</a>
+                    </div>
+
+                    <% if (currentUser && aquarium.owner.id.equals(currentUser._id)) { %>
+                    <div class="container-fluid" style="margin-bottom:20px">
+                        <h1 class="display-3 text-left" style="margin-bottom:20px;">Add Changes</h1>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <a style="margin-bottom:10px;" class="btn btn-md btn-primary col-md-12" href="/aquariums/<%= aquarium._id %>/readings/new">Add New Measurements</a>    
+                            </div>
+                            <div class="col-md-12">
+                                <a style="margin-bottom:30px;" class="btn btn-md btn-warning col-md-12" href="/aquariums/<%= aquarium._id %>/readings">Edit or Delete a Reading</a>
+                            </div>
+                            <div class="col-md-12">
+                                <a style="margin-bottom:10px;" class="btn btn-md btn-primary col-md-12" href="/aquariums/<%= aquarium._id %>/water-changes/new">Add New Water Change</a>
+                            </div>
+                            <div class="col-md-12">
+                                <a style="margin-bottom:30px;" class="btn btn-md btn-warning col-md-12" href="/aquariums/<%= aquarium._id %>/water-changes">Edit or Delete a Water Change</a>
+                            </div>
+                        </div>
+                    </div>
+                    <% } %>
+                </div>
+                
+                
             </div>
         </div>
         

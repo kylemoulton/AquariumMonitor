@@ -1,0 +1,4 @@
+Remove buttons for update/new routes on non authenticated and not owned aquariums
+Add comment to aquariums, style appropriately
+Make it look nice...
+Convert portions to React (adding fish, plants, water changes, readings etc.)

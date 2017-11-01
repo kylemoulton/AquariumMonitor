@@ -1,12 +1,12 @@
 var mongoose = require("mongoose");
 
 var waterChangeSchema = new mongoose.Schema({
-    aquarium: {
+    owner: {
         id: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Aquarium"
+            ref: "User"
         },
-        name: String
+        username: String
     },
     date: Date,
     amount: Number

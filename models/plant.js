@@ -5,8 +5,8 @@ var plantSchema = new mongoose.Schema({
         id: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User"
-        }
-            
+        },
+        username: String
     },
     species: String,
     count: Number 
